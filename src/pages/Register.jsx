@@ -8,9 +8,9 @@ const Register = () => {
         <span className="logo">Chat App</span>
         <span className="title">Register</span>
         <form>
-          <input type="text" placeholder='display name' />
-          <input type="email" placeholder='email'/>
-          <input type="password" placeholder='password'/>
+          <input type="text" placeholder='Display name' />
+          <input type="email" placeholder='Email'/>
+          <input type="password" placeholder='Password'/>
           <input style={{display: 'none'}} type="file" id='file' />
           <label htmlFor="file">
             <img src={Add}/>
