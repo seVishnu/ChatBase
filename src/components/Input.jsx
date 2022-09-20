@@ -4,7 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/ChatContext';
 import { useContext } from 'react';
 import { useState } from 'react';
-import { arrayUnion, doc, Timestamp, updateDoc } from 'firebase/firestore';
+import { arrayUnion, doc, serverTimestamp, Timestamp, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../firebase';
 import { v4 as uuid} from'uuid'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
@@ -47,15 +47,27 @@ const Input = () => {
         }),
       })
     }
+    await updateDoc(doc(db, 'userChats', currentUser.uid), {
+      [data.chatId + '.lastMessage']: {
+        text
+      },
+      [data.chatId + '.date']: serverTimestamp()
+    })
+    await updateDoc(doc(db, 'userChats', data.user.uid), {
+      [data.chatId + '.lastMessage']: {
+        text
+      },
+      [data.chatId + '.date']: serverTimestamp()
+    })
     setText('');
     setImage(null);
   }
   return (
     <div className='input'>
-      <input type="text" placeholder='Type something...' onChange={(e)=> setText(e.target.value)} />
+      <input type="text" placeholder='Type something...' onChange={(e)=> setText(e.target.value)} value={text} />
       <div className="send">
         <img src={Attach} alt="attach" />
-        <input type="file" style={{display: 'none'}} id='file'onChange={(e)=> setImage(e.target.files[0])} />
+        <input type="file" style={{display: 'none'}} id='file'onChange={(e)=> setImage(e.target.files[0])} value={image}/>
         <label htmlFor="file">
           <img src={Img} alt="demo" />
         </label>
